@@ -37,27 +37,30 @@ class Sink(Protocol[T_contra]):
 
 
 def total_kg(items: Sequence[Garment]) -> float:
-    # TODO(Q054): return sum(g.grams for g in items) / 1000
     return sum(g.grams for g in items) / 1000
 
 
 def add_spare_towels(dst: MutableSequence[Towel], n: int) -> None:
-    # TODO(Q054): for i in range(1, n + 1): dst.append(Towel(f"spare-{i}"))
     for i in range(1, n + 1):
         dst.append(Towel(f"spare-{i}"))
+
 
 def add_spare_towels_anywhere(dst: Sink[Towel], n: int) -> None:
-    # TODO(Q054): for i in range(1, n + 1): dst.append(Towel(f"spare-{i}"))
     for i in range(1, n + 1):
         dst.append(Towel(f"spare-{i}"))
 
+
 def transfer(src: Iterable[T], dst: List[T]) -> int:
-    # TODO(Q054): move every item from src to dst, counting them; return moved
-    moved = 0
-    for item in src:
+    items = list(src)
+    
+    for item in items:
         dst.append(item)
-        moved += 1
-    return moved
+    
+    clear = getattr(src, "clear", None)
+    if callable(clear):
+        clear()
+    
+    return len(items)
 
 
 def main() -> None:
@@ -78,7 +81,7 @@ def main() -> None:
     only_shirts: List[Shirt] = [Shirt("kemeja")]
     transfer([Towel("rogue")], only_shirts)    # type: ignore[misc]
     print("    run time let a Towel into List[Shirt]:", only_shirts,
-          [type(g).__name__ for g in only_shirts])
+        [type(g).__name__ for g in only_shirts])
 
 
 if __name__ == "__main__":
